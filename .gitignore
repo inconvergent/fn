@@ -1,0 +1,6 @@
+*.egg-*
+*tmp
+*.*~
+*.pyc
+build
+dist
