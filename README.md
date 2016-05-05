@@ -61,7 +61,3 @@ use this for anything remotely important.
   - Pass in some arguments in terminal?
   - Git sha as folder, not in name?
 
-## Known Bugs
-
-No bugs, only unexpected features.
-
