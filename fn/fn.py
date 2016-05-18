@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
-
-
-
 from datetime import datetime
 from time import time
+
 
 class Fn(object):
 
@@ -129,7 +126,12 @@ class Fn(object):
     res = sorted(glob(p))
     return res
 
+  def get_sha(self):
+
+    return self.sha
+
   def recent(self, d = None):
+
     current = list(self.__get_current_files(d))
 
     if len(current)>0:
@@ -144,22 +146,7 @@ class Fn(object):
     else:
       return []
 
-  ## TODO:
-  # def recent_distinct(self, d = None):
-    # current = list(self.__get_current_files(d))
-
-    # if len(current)>0:
-
-      # name = current[-1].split('.')[0].strip()
-      # res = []
-
-      # for c in reversed(current):
-        # if c.split('.')[0].strip() == name:
-          # res.append(c)
-      # return res
-    # else:
-      # return []
-
   def list(self, d = None):
+
     return self.__get_current_files(d)
 

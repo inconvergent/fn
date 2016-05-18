@@ -46,9 +46,6 @@ def main(args):
         res = fn.list(d=args['<dir>'])
       elif args['-r']:
         res = fn.recent(d=args['<dir>'])
-      # TODO
-      # elif args['-u']:
-        # res = fn.recent_distinct(d=args['<dir>'])
       else:
         res = [fn.name()]
 
