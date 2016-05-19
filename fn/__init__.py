@@ -54,7 +54,7 @@ def main(args):
 
   except Exception as e:
     print(e, file=stderr)
-    print_exc(file=stderr)
+    # print_exc(file=stderr)
     exit(1)
 
 

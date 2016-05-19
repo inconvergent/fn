@@ -61,24 +61,18 @@ class Fn(object):
     return r
 
   def __get_git_sha(self):
-    import subprocess
+    from git.repo import Repo
 
-    cmd = 'git rev-parse --short='+str(self.git_sha_size)+' HEAD'
-    p = subprocess.Popen(
-      cmd,
-      shell=True,
-      stdout=subprocess.PIPE,
-      stderr=subprocess.STDOUT
-    )
-    lines = p.stdout.readlines()
-    sha = lines[0].strip().decode('utf-8')
-
-    if p.wait()!=0:
+    try:
+      repo = Repo()
+      self.repo = repo
+    except Exception:
       raise RuntimeError(
         'fn: directory is not a git repository, or git is not installed.'
       )
-
-    return str(sha)
+    else:
+      sha = repo.git.rev_parse('HEAD', short=self.git_sha_size)
+      return sha
 
   def __get_time(self, utc=False):
 

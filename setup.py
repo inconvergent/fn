@@ -7,7 +7,8 @@ except ImportError:
   from distutils.core import setup
 
 dependencies = [
-  'docopt'
+  'docopt',
+  'gitpython'
 ]
 
 setup(
