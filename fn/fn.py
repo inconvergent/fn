@@ -29,7 +29,8 @@ class Fn(object):
 
     self.append_inc = bool(append_inc)
 
-    self.sha = self.__get_git_sha()
+    self.__init_repo()
+    self.__get_git_sha()
     self.proc_sha = self.__get_proc_time_sha()
 
     self.inc = 0
@@ -60,22 +61,22 @@ class Fn(object):
     r = h.hexdigest()[:self.proc_sha_size]
     return r
 
-  def __get_git_sha(self):
+  def __init_repo(self):
     from git.repo import Repo
 
     try:
       repo = Repo(self.cwd, search_parent_directories=True)
       self.repo = repo
+      self.top_level = repo.git.rev_parse('--show-toplevel')
     except Exception:
       raise RuntimeError(
         'fn: directory is not a git repository, or git is not installed.'
       )
-    else:
-      sha = repo.git.rev_parse('HEAD', short=self.git_sha_size)
-      return sha
+
+  def __get_git_sha(self):
+    self.sha = self.repo.git.rev_parse('HEAD', short=self.git_sha_size)
 
   def __get_time(self, utc=False):
-
     d = self.delimit
     tf = '%Y%m%d{:s}%H%M%S{:s}%f'.format(d, d)
     if utc:
