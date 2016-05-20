@@ -64,7 +64,7 @@ class Fn(object):
     from git.repo import Repo
 
     try:
-      repo = Repo()
+      repo = Repo(self.cwd, search_parent_directories=True)
       self.repo = repo
     except Exception:
       raise RuntimeError(
