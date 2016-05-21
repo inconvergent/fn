@@ -4,8 +4,8 @@
 
 This is a tiny library to generate file names.
 
-It will give you unique file names based on current git commit (branch) as well
-as the time and date, and your own prefix and/or postfix.
+It will give you unique file names based on current git commit, as well as 
+the time and date. You can also set your own prefix and/or postfix.
 
 When called from terminal, `fn`, the file names look like this:
 
@@ -41,7 +41,7 @@ her works in a Periscope video:
 
 ## Install
 
-Install using either (as `sudo`)
+Install using (as `sudo`) either
 
   `./setup.py install`
 
