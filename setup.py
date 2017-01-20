@@ -7,27 +7,27 @@ except ImportError:
   from distutils.core import setup
 
 dependencies = [
-  'docopt',
-  'gitpython'
-]
+    'docopt',
+    'gitpython'
+    ]
 
 setup(
-  name='fn',
-  version='0.1.0',
-  description='fn',
-  url='',
-  license='MIT License',
-  author='Anders Hoff',
-  author_email='inconvergent@gmail.com',
-  install_requires=dependencies,
-  packages=[
-    'fn'
-  ],
-  entry_points={
-    'console_scripts': [
-      'fn=fn:run'
-    ]
-  },
-  zip_safe=True
-)
+    name='fn',
+    version='0.1.1',
+    description='fn',
+    url='',
+    license='MIT License',
+    author='Anders Hoff',
+    author_email='inconvergent@gmail.com',
+    install_requires=dependencies,
+    packages=[
+        'fn'
+        ],
+    entry_points={
+        'console_scripts': [
+            'fn=fn:run'
+            ]
+        },
+    zip_safe=True
+    )
 

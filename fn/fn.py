@@ -4,19 +4,18 @@ from datetime import datetime
 from time import time
 
 
-class Fn(object):
-
+class Fn:
   def __init__(
-    self,
-    prefix = '',
-    postfix = '',
-    delimit = '-',
-    inc_size = 5,
-    git_sha_size = 7,
-    proc_sha_size = 7,
-    append_inc = False
-  ):
-
+      self,
+      prefix='',
+      postfix='',
+      delimit='-',
+      inc_size=5,
+      git_sha_size=7,
+      proc_sha_size=7,
+      append_inc=False,
+      utc=None
+      ):
     self.cwd = self.__get_cwd()
 
     self.prefix = str(prefix)
@@ -26,6 +25,7 @@ class Fn(object):
     self.inc_size = int(inc_size)
     self.git_sha_size = int(git_sha_size)
     self.proc_sha_size = int(proc_sha_size)
+    self.utc = utc
 
     self.append_inc = bool(append_inc)
 
@@ -41,7 +41,7 @@ class Fn(object):
   def __enter__(self):
     return self
 
-  def __exit__(self ,type, value, traceback):
+  def __exit__(self, t, value, traceback):
     return False
 
   def __get_cwd(self):
@@ -56,7 +56,7 @@ class Fn(object):
     p = str(getpid())
     t = self.__get_time()
 
-    slug = '{:s}:{:s}'.format(t,p)
+    slug = '{:s}:{:s}'.format(t, p)
     h.update(slug.encode('utf-8'))
     r = h.hexdigest()[:self.proc_sha_size]
     return r
@@ -70,27 +70,25 @@ class Fn(object):
       self.top_level = repo.git.rev_parse('--show-toplevel')
     except Exception:
       raise RuntimeError(
-        'fn: directory is not a git repository, or git is not installed.'
-      )
+          'fn: directory is not a git repository, or git is not installed.'
+          )
 
   def __get_git_sha(self):
     self.sha = self.repo.git.rev_parse('HEAD', short=self.git_sha_size)
 
-  def __get_time(self, utc=False):
+  def __get_time(self, ):
     d = self.delimit
     tf = '%Y%m%d{:s}%H%M%S{:s}%f'.format(d, d)
-    if utc:
+    if self.utc:
       return datetime.utcnow().strftime(tf)
     else:
       return datetime.now().strftime(tf)
 
   def name(
-    self,
-    postfix = None,
-    utc = False
-  ):
-
-    t = self.__get_time(utc=utc)
+      self,
+      postfix=None
+      ):
+    t = self.__get_time()
     d = self.delimit
     l = [self.prefix, t, d, self.sha, d, self.proc_sha]
 
@@ -98,7 +96,7 @@ class Fn(object):
     if self.append_inc:
       l.extend([d, ('{:0'+str(self.inc_size)+'d}').format(self.inc)])
 
-    if isinstance(postfix,str):
+    if isinstance(postfix, str):
       l.append(postfix)
     elif self.postfix:
       l.append(self.postfix)
@@ -109,8 +107,11 @@ class Fn(object):
 
     return fn
 
-  def __get_current_files(self, d=None):
+  def name_gen(self, prefix=None):
+    while True:
+      yield self.name(prefix)
 
+  def __get_current_files(self, d=None):
     from glob import glob
     from os import chdir
 
@@ -125,12 +126,10 @@ class Fn(object):
 
     return self.sha
 
-  def recent(self, d = None):
-
+  def recent(self, d=None):
     current = list(self.__get_current_files(d))
 
-    if len(current)>0:
-
+    if len(current) > 0:
       name = current[-1].split('.')[0].strip()
       res = []
 
@@ -141,7 +140,6 @@ class Fn(object):
     else:
       return []
 
-  def list(self, d = None):
-
+  def list(self, d=None):
     return self.__get_current_files(d)
 

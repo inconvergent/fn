@@ -29,7 +29,7 @@ from fn.fn import Fn
 def run():
 
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.1.0')
+  args = docopt(__doc__, version='fn 0.1.1')
   main(args)
 
 
@@ -37,8 +37,6 @@ def run():
 def main(args):
 
   from sys import stderr
-  from sys import exit
-  from traceback import print_exc
 
   try:
     with Fn() as fn:
@@ -54,6 +52,7 @@ def main(args):
 
   except Exception as e:
     print(e, file=stderr)
+    # from traceback import print_exc
     # print_exc(file=stderr)
     exit(1)
 

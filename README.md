@@ -4,7 +4,7 @@
 
 This is a tiny library to generate file names.
 
-It will give you unique file names based on current git commit, as well as 
+It will give you unique file names based on current git commit, as well as
 the time and date. You can also set your own prefix and/or postfix.
 
 When called from terminal, `fn`, the file names look like this:
@@ -14,9 +14,11 @@ When called from terminal, `fn`, the file names look like this:
 
 Which currently follows this format:
 
-    yyyymmdd-hhmmss-10^(-6)seconds-gitsha-procsha
+    yyyymmdd-hhmmss-10^(-6)seconds-gitsha-proctimesha
 
-(Subject to change as I see fit, or on suggestion.)
+Where `gitsha` is the prefix of the git commit sha. And `proctimesha` is a hash
+of the time when `Fn()` is called and the process id of the calling python
+script.
 
 If you use the package within python you can also:
 
@@ -55,9 +57,4 @@ The latter is most convenient if you will be editing the code.
 
 No. It only uses the current time to make a relatively distinct string—don't
 use this for anything remotely important.
-
-## Todo
-
-  - Pass in some arguments in terminal?
-  - Git sha as folder, not in name?
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
 from time import sleep
 
 
@@ -10,7 +11,7 @@ def main():
   from fn import Fn
 
   fn = Fn()
-  for i in range(20):
+  for _ in range(20):
     print(fn.name())
     sleep(0.1)
 
