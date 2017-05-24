@@ -68,7 +68,9 @@ class Fn:
     from git.repo import Repo
 
     try:
-      self.repo = Repo(self.cwd, search_parent_directories=True)
+      repo = Repo(self.cwd, search_parent_directories=True)
+      self.top_level = repo.git.rev_parse('--show-toplevel')
+      self.repo = repo
       # self.top_level = self.repo.git.rev_parse('--show-toplevel')
     except Exception:
       # git sha will be '' if we are not in a git repo
