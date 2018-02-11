@@ -2,14 +2,14 @@
 # -*- coding: utf-8 -*-
 
 try:
-  from setuptools import setup
+    from setuptools import setup
 except ImportError:
-  from distutils.core import setup
+    from distutils.core import setup
 
 dependencies = [
     'docopt',
     'gitpython'
-    ]
+]
 
 setup(
     name='fn',
@@ -22,12 +22,11 @@ setup(
     install_requires=dependencies,
     packages=[
         'fn'
-        ],
+    ],
     entry_points={
         'console_scripts': [
             'fn=fn:run'
-            ]
-        },
+        ]
+    },
     zip_safe=True
-    )
-
+)
