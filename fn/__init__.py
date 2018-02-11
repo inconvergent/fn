@@ -44,7 +44,7 @@ def main(args):
     with Fn() as fn:
       if args['-l']:
         res = fn.list(d=args['<dir>'])
-      if args['-L']:
+      elif args['-L']:
         res = fn.list(d=args['<dir>'], absolute=True)
       elif args['-r']:
         res = fn.recent(d=args['<dir>'])

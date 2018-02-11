@@ -125,6 +125,9 @@ class Fn:
     if d:
       chdir(d)
 
+    if not self.sha:
+      raise Exception('not a git repo')
+
     p = '*{:s}*'.format(self.sha)
     res = sorted(glob(p))
 
