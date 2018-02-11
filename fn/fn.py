@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from time import time
+from os.path import abspath
 
 
 class Fn:
@@ -117,7 +118,7 @@ class Fn:
     while True:
       yield self.name(prefix)
 
-  def __get_current_files(self, d=None):
+  def __get_current_files(self, d=None, absolute=False):
     from glob import glob
     from os import chdir
 
@@ -126,16 +127,20 @@ class Fn:
 
     p = '*{:s}*'.format(self.sha)
     res = sorted(glob(p))
+
+    if absolute:
+      return [abspath(f) for f in res]
+
     return res
 
   def get_sha(self):
 
     return self.sha
 
-  def recent(self, d=None):
-    current = list(self.__get_current_files(d))
+  def recent(self, d=None, absolute=False):
+    current = list(self.__get_current_files(d, absolute))
 
-    if len(current) > 0:
+    if current:
       name = current[-1].split('.')[0].strip()
       res = []
 
@@ -143,9 +148,9 @@ class Fn:
         if c.split('.')[0].strip() == name:
           res.append(c)
       return res
-    else:
-      return []
 
-  def list(self, d=None):
-    return self.__get_current_files(d)
+    return []
+
+  def list(self, d=None, absolute=False):
+    return self.__get_current_files(d, absolute)
 
