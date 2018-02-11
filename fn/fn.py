@@ -3,6 +3,9 @@
 from datetime import datetime
 from time import time
 
+from git import InvalidGitRepositoryError
+from git.repo import Repo
+
 
 class Fn:
     def __init__(
@@ -65,16 +68,13 @@ class Fn:
         return r
 
     def __init_repo(self):
-        from git.repo import Repo
-
         try:
             repo = Repo(self.cwd, search_parent_directories=True)
+        except InvalidGitRepositoryError:
+            return
+        else:
             self.top_level = repo.git.rev_parse('--show-toplevel')
             self.repo = repo
-            # self.top_level = self.repo.git.rev_parse('--show-toplevel')
-        except Exception:
-            # git sha will be '' if we are not in a git repo
-            pass
 
     def __get_git_sha(self):
         if self.repo is None:
@@ -90,10 +90,7 @@ class Fn:
         else:
             return datetime.now().strftime(tf)
 
-    def name(
-        self,
-        postfix=None
-    ):
+    def name(self, postfix=None):
         t = self.__get_time()
         d = self.delimit
         l = [self.prefix, t, d, self.sha, d, self.proc_sha]
@@ -128,7 +125,6 @@ class Fn:
         return res
 
     def get_sha(self):
-
         return self.sha
 
     def recent(self, d=None):

@@ -31,26 +31,16 @@ def run():
 
 
 def main(args):
-    from sys import stderr
+    with Fn() as fn:
+        if args['-l']:
+            res = fn.list(d=args['<dir>'])
+        elif args['-r']:
+            res = fn.recent(d=args['<dir>'])
+        else:
+            res = [fn.name()]
 
-    try:
-        with Fn() as fn:
-            if args['-l']:
-                res = fn.list(d=args['<dir>'])
-            elif args['-r']:
-                res = fn.recent(d=args['<dir>'])
-            else:
-                res = [fn.name()]
-
-            for r in res:
-                print(r)
-
-    except Exception as e:
-        print(e, file=stderr)
-        # from traceback import print_exc
-        # print_exc(file=stderr)
-        exit(1)
-
+        for r in res:
+            print(r)
 
 if __name__ == '__main__':
     run()
