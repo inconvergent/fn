@@ -1,4 +1,4 @@
-# FN (Python 3)
+# FN
 
 ## What is it?
 
