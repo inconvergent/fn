@@ -32,7 +32,9 @@ If you use the package within python you can also:
   - Change the delimiter.
   - Override the length of the git sha.
 
-Se `./example.py` for some usage
+Se `./example.py` for some usage.
+
+Use `fn -h` in the terminal to see other options.
 
 ## Why?
 
@@ -47,7 +49,7 @@ her works in a Periscope video:
 
 ## Install
 
-Install using (as `sudo`) either
+Install using either
 
   `./setup.py install`
 
