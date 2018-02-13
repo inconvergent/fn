@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
+from os import chdir
+from os import getcwd
+from os import getpid
+from os import sep
+from os.path import abspath
 from datetime import datetime
 from time import time
-from os.path import abspath
+from glob import glob
+from hashlib import sha256
+
 
 
 class Fn:
@@ -29,7 +36,7 @@ class Fn:
     self.utc = utc
 
     self.repo = None
-    # self.top_level = None
+    self.top_level = None
 
     self.append_inc = bool(append_inc)
 
@@ -49,13 +56,9 @@ class Fn:
     return False
 
   def __get_cwd(self):
-    from os import getcwd
     return getcwd()
 
   def __get_proc_time_sha(self):
-    from os import getpid
-    from hashlib import sha256
-
     h = sha256()
     p = str(getpid())
     t = self.__get_time()
@@ -67,15 +70,17 @@ class Fn:
 
   def __init_repo(self):
     from git.repo import Repo
+    from git import InvalidGitRepositoryError
 
     try:
       repo = Repo(self.cwd, search_parent_directories=True)
       self.top_level = repo.git.rev_parse('--show-toplevel')
       self.repo = repo
-      # self.top_level = self.repo.git.rev_parse('--show-toplevel')
-    except Exception:
+    except InvalidGitRepositoryError:
       # git sha will be '' if we are not in a git repo
       pass
+    except Exception:
+      raise Exception('unexpected error when looking for git repo.')
 
   def __get_git_sha(self):
     if self.repo is None:
@@ -118,18 +123,18 @@ class Fn:
     while True:
       yield self.name(prefix)
 
-  def __get_current_files(self, d=None, absolute=False):
-    from glob import glob
-    from os import chdir
+  def __get_current_files(self, d=None, relative=False, absolute=False):
+    if not self.sha:
+      raise Exception('not a git repo')
 
     if d:
       chdir(d)
 
-    if not self.sha:
-      raise Exception('not a git repo')
-
     p = '*{:s}*'.format(self.sha)
     res = sorted(glob(p))
+
+    if relative:
+      return ['./{:s}/{:s}'.format(d, f) for f in res]
 
     if absolute:
       return [abspath(f) for f in res]
@@ -140,20 +145,20 @@ class Fn:
 
     return self.sha
 
-  def recent(self, d=None, absolute=False):
-    current = list(self.__get_current_files(d, absolute))
+  def recent(self, **args):
+    current = list(self.__get_current_files(**args))
 
     if current:
-      name = current[-1].split('.')[0].strip()
+      name = '.'.join(current[-1].split('.')[:-1]).strip()
       res = []
 
       for c in reversed(current):
-        if c.split('.')[0].strip() == name:
+        if name in c:
           res.append(c)
       return res
 
     return []
 
-  def list(self, d=None, absolute=False):
-    return self.__get_current_files(d, absolute)
+  def list(self, **args):
+    return self.__get_current_files(**args)
 

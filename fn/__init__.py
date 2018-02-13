@@ -5,20 +5,21 @@
 
 Usage:
   fn
-  fn [-l | -L] [<dir>]
-  fn [-r | -R] [<dir>]
-  fn -h
+  fn -l [-a|-A] [<dir>]
+  fn -r [-a|-A] [<dir>]
+  fn -h | --help
+  fn --version
 
-Examples:
 
-  fn            Get a distinct file name
-  fn -l [<dir>] List all files named after current git commit.
-  fn -L [<dir>] Same as -l, but with absolute path
-  fn -r [<dir>] List most recent files named
-                  after current git commit.
-  fn -R [<dir>] Same as -r, but with absolute path
-  -h            Show this screen.
-  --version     Show version.
+Options:
+  -l          List all files named after current git commit.
+  -r          List most recent files (of all file types)
+                named after current git commit.
+  -A          Use absolute path.
+  -a          Use relative path.
+  -h --help   Show this screen.
+  --version   Show version.
+
 """
 
 
@@ -29,9 +30,8 @@ from fn.fn import Fn
 
 
 def run():
-
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.1.2')
+  args = docopt(__doc__, version='fn 0.2.0')
   main(args)
 
 
@@ -43,13 +43,11 @@ def main(args):
   try:
     with Fn() as fn:
       if args['-l']:
-        res = fn.list(d=args['<dir>'])
-      elif args['-L']:
-        res = fn.list(d=args['<dir>'], absolute=True)
+        res = fn.list(d=args['<dir>'], relative=args['-a'],
+                      absolute=args['-A'])
       elif args['-r']:
-        res = fn.recent(d=args['<dir>'])
-      elif args['-R']:
-        res = fn.recent(d=args['<dir>'], absolute=True)
+        res = fn.recent(d=args['<dir>'], relative=args['-a'],
+                        absolute=args['-A'])
       else:
         res = [fn.name()]
 
@@ -57,7 +55,7 @@ def main(args):
         print(r)
 
   except Exception as e:
-    print(e, file=stderr)
+    print('err: ' + str(e), file=stderr)
     # from traceback import print_exc
     # print_exc(file=stderr)
     exit(1)

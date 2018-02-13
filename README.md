@@ -43,9 +43,8 @@ models, 2D vector files), and I've always wanted a more efficient way of
 maintaining unique file names.
 
 I got inspired to write this when I saw this tweet about how Vera Molar names
-her works in a Periscope video:
-
-    https://twitter.com/inconvergent/status/700341427344113665
+her works this Periscope video
+https://twitter.com/inconvergent/status/700341427344113665
 
 ## Install
 
