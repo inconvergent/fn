@@ -1,15 +1,29 @@
 # -*- coding: utf-8 -*-
 
+
+from datetime import datetime
+from glob import glob
+from hashlib import sha256
 from os import chdir
 from os import getcwd
 from os import getpid
-from os import sep
 from os.path import abspath
-from datetime import datetime
+from os.path import splitext
+from os.path import normpath
 from time import time
-from glob import glob
-from hashlib import sha256
+import ntpath
 
+
+def get_file_name(p):
+  h, t = ntpath.split(p)
+  return t or ntpath.basename(h)
+
+def get_only_file_name(p):
+  return splitext(p)[0]
+
+def norm_path_gen(ll):
+  for l in ll:
+    yield normpath(l)
 
 
 class Fn:
@@ -24,7 +38,7 @@ class Fn:
       append_inc=False,
       utc=None
       ):
-    self.cwd = self.__get_cwd()
+    self.cwd = getcwd()
 
     self.prefix = str(prefix)
     self.postfix = str(postfix)
@@ -54,9 +68,6 @@ class Fn:
 
   def __exit__(self, t, value, traceback):
     return False
-
-  def __get_cwd(self):
-    return getcwd()
 
   def __get_proc_time_sha(self):
     h = sha256()
@@ -88,22 +99,26 @@ class Fn:
     else:
       self.sha = self.repo.git.rev_parse('HEAD', short=self.git_sha_size)
 
-  def __get_time(self, ):
+  def __get_time(self, short=False):
     d = self.delimit
-    tf = '%Y%m%d{:s}%H%M%S{:s}%f'.format(d, d)
+
+    if short:
+      tf = '%Y%m%d{deli}%H%M%S'.format(deli=d)
+    else:
+      tf = '%Y%m%d{deli}%H%M%S{deli}%f'.format(deli=d)
+
     if self.utc:
       return datetime.utcnow().strftime(tf)
-    else:
-      return datetime.now().strftime(tf)
+    return datetime.now().strftime(tf)
 
   def name(
       self,
-      postfix=None
+      postfix=None,
+      short=False
       ):
-    t = self.__get_time()
+    t = self.__get_time(short)
     d = self.delimit
     l = [self.prefix, t, d, self.sha, d, self.proc_sha]
-
 
     if self.append_inc:
       l.extend([d, ('{:0'+str(self.inc_size)+'d}').format(self.inc)])
@@ -133,31 +148,27 @@ class Fn:
     p = '*{:s}*'.format(self.sha)
     res = sorted(glob(p))
 
+    gen = res
+
     if relative:
-      return ['./{:s}/{:s}'.format(d, f) for f in res]
+      gen = ['{:s}/{:s}'.format(d, f) for f in res]
+    elif absolute:
+      gen = [abspath(f) for f in res]
 
-    if absolute:
-      return [abspath(f) for f in res]
-
-    return res
+    return norm_path_gen(gen)
 
   def get_sha(self):
-
     return self.sha
 
   def recent(self, **args):
     current = list(self.__get_current_files(**args))
 
-    if current:
-      name = '.'.join(current[-1].split('.')[:-1]).strip()
-      res = []
+    if not current:
+      return []
 
-      for c in reversed(current):
-        if name in c:
-          res.append(c)
-      return res
-
-    return []
+    name = get_file_name(current[-1])
+    only_name = get_only_file_name(name)
+    return filter(lambda x: only_name in x, reversed(current))
 
   def list(self, **args):
     return self.__get_current_files(**args)

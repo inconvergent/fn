@@ -4,7 +4,7 @@
 """fn
 
 Usage:
-  fn
+  fn [-m]
   fn -l [-a|-A] [<dir>]
   fn -r [-a|-A] [<dir>]
   fn -h | --help
@@ -17,6 +17,7 @@ Options:
                 named after current git commit.
   -A          Use absolute path.
   -a          Use relative path.
+  -m          Include microseconds.
   -h --help   Show this screen.
   --version   Show version.
 
@@ -31,7 +32,7 @@ from fn.fn import Fn
 
 def run():
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.2.0')
+  args = docopt(__doc__, version='fn 0.2.1')
   main(args)
 
 
@@ -43,13 +44,15 @@ def main(args):
   try:
     with Fn() as fn:
       if args['-l']:
-        res = fn.list(d=args['<dir>'], relative=args['-a'],
+        res = fn.list(d=args['<dir>'],
+                      relative=args['-a'],
                       absolute=args['-A'])
       elif args['-r']:
-        res = fn.recent(d=args['<dir>'], relative=args['-a'],
+        res = fn.recent(d=args['<dir>'],
+                        relative=args['-a'],
                         absolute=args['-A'])
       else:
-        res = [fn.name()]
+        res = [fn.name(short=not args['-m'])]
 
       for r in res:
         print(r)
