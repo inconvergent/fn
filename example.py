@@ -39,6 +39,11 @@ def main():
   print(fn.name(postfix=''))
   print(fn.name(postfix='.png'))
 
+
+  fn = Fn(milli=False)
+  print(fn.name())
+
+
   print()
 
 

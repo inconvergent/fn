@@ -36,6 +36,7 @@ class Fn:
       git_sha_size=7,
       proc_sha_size=7,
       append_inc=False,
+      milli=True,
       utc=None
       ):
     self.cwd = getcwd()
@@ -48,6 +49,8 @@ class Fn:
     self.git_sha_size = int(git_sha_size)
     self.proc_sha_size = int(proc_sha_size)
     self.utc = utc
+
+    self.milli = milli
 
     self.repo = None
     self.top_level = None
@@ -99,13 +102,13 @@ class Fn:
     else:
       self.sha = self.repo.git.rev_parse('HEAD', short=self.git_sha_size)
 
-  def __get_time(self, short=False):
+  def __get_time(self):
     d = self.delimit
 
-    if short:
-      tf = '%Y%m%d{deli}%H%M%S'.format(deli=d)
-    else:
+    if self.milli:
       tf = '%Y%m%d{deli}%H%M%S{deli}%f'.format(deli=d)
+    else:
+      tf = '%Y%m%d{deli}%H%M%S'.format(deli=d)
 
     if self.utc:
       return datetime.utcnow().strftime(tf)
@@ -114,9 +117,8 @@ class Fn:
   def name(
       self,
       postfix=None,
-      short=False
       ):
-    t = self.__get_time(short)
+    t = self.__get_time()
     d = self.delimit
     l = [self.prefix, t, d, self.sha, d, self.proc_sha]
 

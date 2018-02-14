@@ -13,7 +13,7 @@ dependencies = [
 
 setup(
     name='fn',
-    version='0.2.1',
+    version='0.2.2',
     description='fn',
     url='',
     license='MIT License',

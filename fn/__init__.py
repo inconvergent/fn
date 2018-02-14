@@ -32,7 +32,7 @@ from fn.fn import Fn
 
 def run():
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.2.1')
+  args = docopt(__doc__, version='fn 0.2.2')
   main(args)
 
 
@@ -42,7 +42,7 @@ def main(args):
   from sys import stderr
 
   try:
-    with Fn() as fn:
+    with Fn(milli=args['-m']) as fn:
       if args['-l']:
         res = fn.list(d=args['<dir>'],
                       relative=args['-a'],
@@ -52,7 +52,7 @@ def main(args):
                         relative=args['-a'],
                         absolute=args['-A'])
       else:
-        res = [fn.name(short=not args['-m'])]
+        res = [fn.name()]
 
       for r in res:
         print(r)
