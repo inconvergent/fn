@@ -5,24 +5,22 @@
 
 Usage:
   fn [-m]
+  fn -s|-p
   fn -l [-a|-A] [<dir>]
   fn -r [-a|-A] [<dir>]
-  fn -s|-p
-
   fn --help
   fn --version
 
 
 Options:
+  -m          Include microseconds.
+  -s          Return git sha only.
+  -p          Return proc+date sha only.
   -l          List all files named after current git commit.
   -r          List most recent files (of all file types)
                 named after current git commit.
-  -A          Use absolute path.
-  -a          Use relative path.
-  -m          Include microseconds.
-  -s          Get git sha only.
-  -p          Get proc+date sha only.
-
+  -A          Return absolute paths.
+  -a          Return relative paths.
   --help      Show this screen.
   --version   Show version.
 
