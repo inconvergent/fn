@@ -8,11 +8,15 @@ from os import chdir
 from os import getcwd
 from os import getpid
 from os.path import abspath
-from os.path import splitext
 from os.path import normpath
+from os.path import splitext
 from time import time
 import ntpath
 
+
+
+class RepoException(Exception):
+  pass
 
 def get_file_name(p):
   h, t = ntpath.split(p)
@@ -133,7 +137,6 @@ class Fn:
     fn = ''.join(l)
     self.current = fn
     self.inc += 1
-
     return fn
 
   def name_gen(self, prefix=None):
@@ -142,7 +145,7 @@ class Fn:
 
   def __get_current_files(self, d=None, relative=False, absolute=False):
     if not self.sha:
-      raise Exception('not a git repo')
+      raise RepoException('not a git repo')
 
     if d:
       chdir(d)
@@ -159,12 +162,16 @@ class Fn:
 
     return norm_path_gen(gen)
 
+  def get_proc_sha(self):
+    return self.proc_sha
+
   def get_sha(self):
+    if not self.sha:
+      raise RepoException('not a git repo')
     return self.sha
 
   def recent(self, **args):
     current = list(self.__get_current_files(**args))
-
     if not current:
       return []
 
