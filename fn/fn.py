@@ -102,7 +102,7 @@ class Fn:
 
   def __get_git_sha(self):
     if self.repo is None:
-      self.sha = ''
+      self.sha = None
     else:
       self.sha = self.repo.git.rev_parse('HEAD', short=self.git_sha_size)
 
@@ -124,7 +124,9 @@ class Fn:
       ):
     t = self.__get_time()
     d = self.delimit
-    l = [self.prefix, t, d, self.sha, d, self.proc_sha]
+    l = [self.prefix, t, d,
+         self.sha if self.sha is not None else '',
+         d, self.proc_sha]
 
     if self.append_inc:
       l.extend([d, ('{:0'+str(self.inc_size)+'d}').format(self.inc)])
@@ -144,7 +146,7 @@ class Fn:
       yield self.name(prefix)
 
   def __get_current_files(self, d=None, relative=False, absolute=False):
-    if not self.sha:
+    if self.sha is None:
       raise RepoException('not a git repo')
 
     if d:
@@ -166,7 +168,7 @@ class Fn:
     return self.proc_sha
 
   def get_sha(self):
-    if not self.sha:
+    if self.sha is None:
       raise RepoException('not a git repo')
     return self.sha
 
