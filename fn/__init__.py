@@ -8,6 +8,7 @@ Usage:
   fn -s|-p
   fn -l [-a|-A] [<dir>]
   fn -r [-a|-A] [<dir>]
+  fn -R [<dir>]
   fn --help
   fn --version
 
@@ -19,6 +20,7 @@ Options:
   -l          List all files named after current git commit.
   -r          List most recent files (of all file types)
                 named after current git commit.
+  -R          List most recent file name with no suffix.
   -A          Return absolute paths.
   -a          Return relative paths.
   --help      Show this screen.
@@ -55,6 +57,8 @@ def main(args):
         res = fn.recent(d=args['<dir>'],
                         relative=args['-a'],
                         absolute=args['-A'])
+      elif args['-R']:
+        res = fn.recent_pref(d=args['<dir>'])
       elif args['-p']:
         res = [fn.get_proc_sha()]
       elif args['-s']:

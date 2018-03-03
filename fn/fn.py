@@ -181,6 +181,15 @@ class Fn:
     only_name = get_only_file_name(name)
     return filter(lambda x: only_name in x, reversed(current))
 
+  def recent_pref(self, d):
+    current = list(self.__get_current_files(d))
+    if not current:
+      return []
+
+    name = get_file_name(current[-1])
+    only_name = get_only_file_name(name)
+    return [only_name]
+
   def list(self, **args):
     return self.__get_current_files(**args)
 
