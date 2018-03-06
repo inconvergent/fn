@@ -50,11 +50,11 @@ https://twitter.com/inconvergent/status/700341427344113665
 
 Install using either
 
-  `./setup.py install`
+  `./setup.py install --user`
 
 Or
 
-  `./setup.py develop`
+  `./setup.py develop --user`
 
 The latter is most convenient if you will be editing the code.
 
