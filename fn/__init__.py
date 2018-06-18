@@ -18,8 +18,7 @@ Options:
   -s          Return git sha only.
   -p          Return proc+date sha only.
   -l          List all files named after current git commit.
-  -r          List most recent files (of all file types)
-                named after current git commit.
+  -r          List all files with the most recent procsha.
   -R          List most recent file name with no suffix.
   -A          Return absolute paths.
   -a          Return relative paths.
@@ -41,7 +40,7 @@ __ALL__ = ['Fn']
 
 def run():
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.2.2')
+  args = docopt(__doc__, version='fn 0.2.3')
   main(args)
 
 

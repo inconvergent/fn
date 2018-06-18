@@ -23,7 +23,7 @@ def get_file_name(p):
   return t or ntpath.basename(h)
 
 def get_only_file_name(p):
-  return splitext(p)[0]
+  return '-'.join(splitext(p)[0].split('-')[:4])
 
 def norm_path_gen(ll):
   for l in ll:
