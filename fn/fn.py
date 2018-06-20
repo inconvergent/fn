@@ -30,6 +30,16 @@ def norm_path_gen(ll):
     yield normpath(l)
 
 
+def short_ref(i):
+  print(i)
+  if not i:
+    return None
+  try:
+    return list(i)[0].split('-')[3]
+  except IndexError:
+    return None
+
+
 class Fn:
   def __init__(
       self,

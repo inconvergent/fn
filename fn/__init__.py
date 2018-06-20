@@ -7,7 +7,7 @@ Usage:
   fn [-m]
   fn -s|-p
   fn -l [-a|-A] [<dir>]
-  fn -r [-a|-A] [<dir>]
+  fn -r [-a|-A|-i] [<dir>]
   fn -R [<dir>]
   fn --help
   fn --version
@@ -15,13 +15,14 @@ Usage:
 
 Options:
   -m          Include microseconds.
-  -s          Return git sha only.
+  -s          Return current git sha only.
   -p          Return proc+date sha only.
   -l          List all files named after current git commit.
   -r          List all files with the most recent procsha.
   -R          List most recent file name with no suffix.
   -A          Return absolute paths.
   -a          Return relative paths.
+  -i          Return proc+date sha only.
   --help      Show this screen.
   --version   Show version.
 
@@ -32,6 +33,7 @@ from sys import stderr
 from traceback import print_exc
 from fn.fn import Fn
 from fn.fn import RepoException
+from fn.fn import short_ref
 
 
 __ALL__ = ['Fn']
@@ -40,7 +42,7 @@ __ALL__ = ['Fn']
 
 def run():
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.2.3')
+  args = docopt(__doc__, version='fn 0.2.4')
   main(args)
 
 
@@ -56,6 +58,9 @@ def main(args):
         res = fn.recent(d=args['<dir>'],
                         relative=args['-a'],
                         absolute=args['-A'])
+
+        if args['-i']:
+          res = [short_ref(res)]
       elif args['-R']:
         res = fn.recent_pref(d=args['<dir>'])
       elif args['-p']:
@@ -66,7 +71,8 @@ def main(args):
         res = [fn.name()]
 
       for r in res:
-        print(r)
+        if r:
+          print(r)
 
   except RepoException as e:
     print('err: ' + str(e), file=stderr)
