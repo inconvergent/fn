@@ -13,22 +13,12 @@ def main():
   fn = Fn()
   for _ in range(20):
     print(fn.name())
-    sleep(0.1)
+    sleep(0.01)
 
   print()
 
-  fn = Fn(append_inc=True)
+  fn = Fn()
   print(fn.name())
-  print(fn.current) # overwritten when you call fn.name()
-  print(fn.name())
-  print(fn.current)
-
-  print()
-
-  fn = Fn(inc_size=3, append_inc=True)
-  for i in range(20):
-    print(fn.name())
-    sleep(0.1)
 
   print()
 

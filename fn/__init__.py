@@ -5,24 +5,29 @@
 
 Usage:
   fn [-m]
-  fn -s|-p
+  fn -g|-p
   fn -l [-a|-A] [<dir>]
-  fn -r [-a|-A|-i] [<dir>]
+  fn -r [-a|-A] [<dir>]
   fn -R [<dir>]
+  fn -s [<dir>]
   fn --help
   fn --version
 
 
 Options:
   -m          Include microseconds.
-  -s          Return current git sha only.
-  -p          Return proc+date sha only.
+  -g          Return current git sha.
+  -p          Return proc+datetime.
+
   -l          List all files named after current git commit.
+
   -r          List all files with the most recent procsha.
-  -R          List most recent file name with no suffix.
+  -R          Return most recent file name with no suffix.
+  -s          Return most recent file name, Proc+datetime sha only.
+
   -A          Return absolute paths.
   -a          Return relative paths.
-  -i          Return proc+date sha only.
+
   --help      Show this screen.
   --version   Show version.
 
@@ -32,7 +37,6 @@ Options:
 from sys import stderr
 from traceback import print_exc
 from fn.fn import Fn
-from fn.fn import RepoException
 from fn.fn import short_ref
 
 
@@ -42,7 +46,7 @@ __ALL__ = ['Fn']
 
 def run():
   from docopt import docopt
-  args = docopt(__doc__, version='fn 0.2.4')
+  args = docopt(__doc__, version='fn 1.0.0')
   main(args)
 
 
@@ -50,22 +54,19 @@ def run():
 def main(args):
   try:
     with Fn(milli=args['-m']) as fn:
+      a = args['-a']
+      A = args['-A']
       if args['-l']:
-        res = fn.list(d=args['<dir>'],
-                      relative=args['-a'],
-                      absolute=args['-A'])
+        res = fn.list(d=args['<dir>'], relative=a, absolute=A)
       elif args['-r']:
-        res = fn.recent(d=args['<dir>'],
-                        relative=args['-a'],
-                        absolute=args['-A'])
-
-        if args['-i']:
-          res = [short_ref(res)]
+        res = fn.recent(d=args['<dir>'], relative=a, absolute=A)
+      elif args['-s']:
+        res = [short_ref(list(fn.recent(d=args['<dir>'])))]
       elif args['-R']:
-        res = fn.recent_pref(d=args['<dir>'])
+        res = fn.recent_nopref(d=args['<dir>'])
       elif args['-p']:
         res = [fn.get_proc_sha()]
-      elif args['-s']:
+      elif args['-g']:
         res = [fn.get_sha()]
       else:
         res = [fn.name()]
@@ -74,7 +75,7 @@ def main(args):
         if r:
           print(r)
 
-  except RepoException as e:
+  except ValueError as e:
     print('err: ' + str(e), file=stderr)
     exit(1)
   except Exception as e:

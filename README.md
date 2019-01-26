@@ -1,5 +1,6 @@
 # FN
 
+
 ## What is it?
 
 This is a tiny library to generate file names.
@@ -9,12 +10,12 @@ time and date. You can also set your own prefix and/or postfix.
 
 When `fn` is called from the terminal, the file names look like this:
 
-    20160428-001056-597392-2d95c86-b775190
-    20160428-001056-153234-2d95c86-b775190
+    20190126-142138-244db3e-5f3a90f9
+    20190126-142155-244db3e-42464759
 
 Which currently follows this format:
 
-    yyyymmdd-hhmmss-10^(-6)seconds-gitsha-proctimesha
+    yyyymmdd-hhmmss-gitsha-procdatetimesha
 
 Where `gitsha` is the prefix of the git commit sha. And `proctimesha` is a hash
 of the time when `Fn()` is called and the process id of the calling python
@@ -22,19 +23,10 @@ script.
 
 If you are not in a git repo, it looks like this:
 
-    20160428-001056-153234--b775190
-
-If you use the package within python you can also:
-
-  - Pass your own prefix and postfix.
-  - Override the postfix.
-  - Append incremental numbers.
-  - Change the delimiter.
-  - Override the length of the git sha.
-
-Se `./example.py` for some usage.
+    20190126-142213--cc607dd0
 
 Use `fn -h` in the terminal to see other options.
+
 
 ## Why?
 
@@ -45,6 +37,7 @@ maintaining unique file names.
 I got inspired to write this when I saw this tweet about how Vera Molar names
 her works this Periscope video
 https://twitter.com/inconvergent/status/700341427344113665
+
 
 ## Install
 
@@ -58,10 +51,12 @@ Or
 
 The latter is most convenient if you will be editing the code.
 
+
 ## Does it guarantee unique file names in any way?
 
 No. It only uses the current time to make a relatively distinct string—don't
 use this for anything remotely important.
+
 
 ## On Use and Contributions
 
