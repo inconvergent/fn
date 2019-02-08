@@ -30,7 +30,7 @@ def short_ref(i):
   if not i:
     return None
   try:
-    return get_only_file_name(get_file_name(list(i)[0])).split('-')[-1]
+    return get_only_file_name(get_file_name(list(i)[0])).split('-')[3]
   except IndexError:
     return None
 
