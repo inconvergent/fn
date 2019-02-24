@@ -5,84 +5,91 @@
 
 Usage:
   fn [-m]
-  fn -g|-p
+  fn -g
+  fn -p
+  fn -t [-m]
   fn -l [-a|-A] [<dir>]
   fn -r [-a|-A] [<dir>]
   fn -R [<dir>]
   fn -s [<dir>]
-  fn --help
-  fn --version
 
 
 Options:
-  -m          Include microseconds.
-  -g          Return current git sha.
-  -p          Return proc+datetime.
+  -t          return timestamp.
+  -g          return current git sha.
+  -p          return pid:datetime sha.
+  -m          include microseconds.
 
-  -l          List all files named after current git commit.
+  -l          list all files with current git sha.
+  -r          list all files with the most recent pid:datetime sha.
 
-  -r          List all files with the most recent procsha.
-  -R          Return most recent file name with no suffix.
-  -s          Return most recent file name, Proc+datetime sha only.
+  -R          return most recent file name with no suffix.
+  -s          return most recent file name, pid:datetime sha only.
 
-  -A          Return absolute paths.
-  -a          Return relative paths.
+  -A          absolute paths.
+  -a          relative paths.
 
-  --help      Show this screen.
-  --version   Show version.
+  -h --help   show this screen.
+  --version   show version.
 
 """
 
 
 from sys import stderr
 from traceback import print_exc
+
+from docopt import docopt
+
 from fn.fn import Fn
-from fn.fn import short_ref
-
-
-__ALL__ = ['Fn']
-
-
-
-def run():
-  from docopt import docopt
-  args = docopt(__doc__, version='fn 1.0.0')
-  main(args)
+from fn.utils import get_time
+from fn.utils import short_ref
 
 
 
-def main(args):
+def handle_args(fn, args):
+  if args['-l']:
+    return fn.lst(d=args['<dir>'], rel=args['-a'], _abs=args['-A'])
+  if args['-r']:
+    return fn.recent(d=args['<dir>'], rel=args['-a'], _abs=args['-A'])
+  if args['-s']:
+    return [short_ref(list(fn.recent(d=args['<dir>'])))]
+  if args['-R']:
+    return fn.recent_nopref(d=args['<dir>'])
+  if args['-p']:
+    return [fn.get_pid_sha()]
+  if args['-g']:
+    return [fn.get_sha()]
+  return [fn.name(args['-m'])]
+
+
+def genif(res):
+  if res:
+    for r in res:
+      if r:
+        yield r
+
+
+def main():
+  args = docopt(__doc__, version='fn 1.1.2')
+
+  # shortcut
+  if args['-t']:
+    print(get_time(args['-m']))
+    exit(0)
+
   try:
-    with Fn(milli=args['-m']) as fn:
-      a = args['-a']
-      A = args['-A']
-      if args['-l']:
-        res = fn.list(d=args['<dir>'], relative=a, absolute=A)
-      elif args['-r']:
-        res = fn.recent(d=args['<dir>'], relative=a, absolute=A)
-      elif args['-s']:
-        res = [short_ref(list(fn.recent(d=args['<dir>'])))]
-      elif args['-R']:
-        res = fn.recent_nopref(d=args['<dir>'])
-      elif args['-p']:
-        res = [fn.get_proc_sha()]
-      elif args['-g']:
-        res = [fn.get_sha()]
-      else:
-        res = [fn.name()]
-
-      for r in res:
-        if r:
-          print(r)
+    with Fn() as fn:
+      for r in genif(handle_args(fn, args)):
+        print(r)
 
   except ValueError as e:
     print('err: ' + str(e), file=stderr)
     exit(1)
   except Exception as e:
     print_exc(file=stderr)
-    exit(1)
+    exit(2)
 
 
 if __name__ == '__main__':
-  run()
+  main()
 

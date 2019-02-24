@@ -1,4 +1,4 @@
-# FN
+# FN---File Names
 
 
 ## What is it?
@@ -17,8 +17,8 @@ Which currently follows this format:
 
     yyyymmdd-hhmmss-gitsha-procdatetimesha
 
-Where `gitsha` is the prefix of the git commit sha. And `proctimesha` is a hash
-of the time when `Fn()` is called and the process id of the calling python
+Where `gitsha` is the prefix of the git commit sha. And `procdatetimesha` is a
+hash of the time when `Fn()` is called and the process id of the calling python
 script.
 
 If you are not in a git repo, it looks like this:
@@ -34,22 +34,25 @@ I have a lot of projects where I make large amounts of files (images, 3D
 models, 2D vector files), and I've always wanted a more efficient way of
 maintaining unique file names.
 
-I got inspired to write this when I saw this tweet about how Vera Molar names
-her works this Periscope video
-https://twitter.com/inconvergent/status/700341427344113665
+I got the idea for this when I saw how Vera Molar names her works in this
+Periscope video https://twitter.com/inconvergent/status/700341427344113665
+
+
+## Dependecies
+
+The code runs on Linux (only, probably) and requires `git` to be installed. It
+also uses `docopt`, installed via `setup.py`.
 
 
 ## Install
 
-Install using either
+The easiest is to install with:
 
-  `./setup.py install --user`
+    ./setup.py [install | develop] --user
 
-Or
-
-  `./setup.py develop --user`
-
-The latter is most convenient if you will be editing the code.
+Unfortunately the command line support relies on `entry_points`, which is
+rather slow. To make it run faster you can (for instance) add a symlink in your
+local `bin` folder to `./run.py` in this package.
 
 
 ## Does it guarantee unique file names in any way?
