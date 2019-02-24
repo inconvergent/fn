@@ -43,7 +43,7 @@ https://twitter.com/inconvergent/status/700341427344113665
 
 Install with:
 
-  `./setup.py [install | develop] --user`
+    ./setup.py [install | develop] --user
 
 
 ## Does it guarantee unique file names in any way?
