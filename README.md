@@ -17,8 +17,8 @@ Which currently follows this format:
 
     yyyymmdd-hhmmss-gitsha-procdatetimesha
 
-Where `gitsha` is the prefix of the git commit sha. And `proctimesha` is a hash
-of the time when `Fn()` is called and the process id of the calling python
+Where `gitsha` is the prefix of the git commit sha. And `procdatetimesha` is a
+hash of the time when `Fn()` is called and the process id of the calling python
 script.
 
 If you are not in a git repo, it looks like this:
@@ -41,15 +41,9 @@ https://twitter.com/inconvergent/status/700341427344113665
 
 ## Install
 
-Install using either
+Install with:
 
-  `./setup.py install --user`
-
-Or
-
-  `./setup.py develop --user`
-
-The latter is most convenient if you will be editing the code.
+  `./setup.py [install | develop] --user`
 
 
 ## Does it guarantee unique file names in any way?

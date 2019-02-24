@@ -3,13 +3,10 @@
 
 
 from time import sleep
-
+from fn import Fn
 
 
 def main():
-
-  from fn import Fn
-
   fn = Fn()
   for _ in range(20):
     print(fn.name())
@@ -22,18 +19,14 @@ def main():
 
   print()
 
-  # you can't override the prefix
-
-  fn = Fn(delimit='.', prefix='/some/path/', postfix='.txt', git_sha_size=10)
+  fn = Fn(prefix='/some/path/', postfix='.txt', git_sha_size=10)
   print(fn.name())
+  # note: you can't override the prefix
   print(fn.name(postfix=''))
   print(fn.name(postfix='.png'))
 
-
-  fn = Fn(milli=False)
-  print(fn.name())
-
-
+  print(fn.name(milli=False))
+  print(fn.name(milli=True))
   print()
 
 
