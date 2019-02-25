@@ -5,15 +5,17 @@ from glob import glob
 from os import chdir
 from os import getcwd
 from os import getpid
-from os.path import abspath
 
-from .git import _init_git_sha
-from .git import _init_repo
+# from .git import _init_git_sha
+# from .git import _init_repo
+from .git import _init_git_sha_cmd
+
+from .utils import _getsha
 from .utils import get_file_name
 from .utils import get_time
 from .utils import norm_path_gen
+from .utils import rel_abs_path
 from .utils import remove_extension
-from .utils import _getsha
 
 DELIMIT = '-'
 
@@ -25,7 +27,8 @@ class Fn:
     self.git_sha_size = git_sha_size
     self.proc_sha_size = proc_sha_size
 
-    self.gitsha = _init_git_sha(_init_repo(getcwd()), self.git_sha_size)
+    # self.gitsha = _init_git_sha(_init_repo(getcwd()), self.git_sha_size)
+    self.gitsha = _init_git_sha_cmd(self.git_sha_size)
     self.proc_sha = self.__get_proc_time_sha()
 
   def __enter__(self):
@@ -58,14 +61,8 @@ class Fn:
       except FileNotFoundError:
         raise ValueError('no folder, {:s}'.format(d))
 
-    res = sorted(glob('*{:s}*'.format(self.gitsha)))
-    gen = res
-    if rel:
-      gen = ['{:s}/{:s}'.format(d, f) for f in res]
-    elif _abs:
-      gen = [abspath(f) for f in res]
-
-    return norm_path_gen(gen)
+    return norm_path_gen(
+        rel_abs_path(d, rel, _abs, sorted(glob('*{:s}*'.format(self.gitsha)))))
 
   def get_proc_sha(self):
     return self.proc_sha

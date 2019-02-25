@@ -38,16 +38,12 @@ Options:
 from sys import stderr
 from traceback import print_exc
 
+from docopt import docopt
+
 from fn.fn import Fn
-from fn.utils import short_ref
 from fn.utils import get_time
+from fn.utils import short_ref
 
-
-
-def run():
-  from docopt import docopt
-  args = docopt(__doc__, version='fn 1.1.0')
-  main(args)
 
 
 def handle_args(fn, args):
@@ -73,7 +69,10 @@ def genif(res):
         yield r
 
 
-def main(args):
+def main():
+  args = docopt(__doc__, version='fn 1.1.1')
+
+  # shortcut
   if args['-t']:
     print(get_time(args['-m']))
     exit(0)
@@ -92,5 +91,5 @@ def main(args):
 
 
 if __name__ == '__main__':
-  run()
+  main()
 

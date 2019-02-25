@@ -9,15 +9,15 @@ except ImportError:
 
 
 setup(name='fn',
-      version='1.1.0',
+      version='1.1.1',
       description='fn',
-      url='',
+      url='https://github.com/inconvergent/fn',
       license='MIT License',
       author='Anders Hoff',
       author_email='inconvergent@gmail.com',
-      install_requires=['docopt', 'gitpython'],
+      install_requires=['docopt'],
       packages=['fn'],
-      entry_points={'console_scripts': ['fn=fn:run']},
+      entry_points={'console_scripts': ['fn=fn:main']},
       zip_safe=True,
       )
 

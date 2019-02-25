@@ -41,9 +41,13 @@ https://twitter.com/inconvergent/status/700341427344113665
 
 ## Install
 
-Install with:
+The easiest is to unstall with:
 
     ./setup.py [install | develop] --user
+
+Unfortunately the command line support relies on `entry_points`, which is
+rather slow. To make it run faster you can (for instance) add a symlink in your
+local `bin` folder to `./run.py` in this package.
 
 
 ## Does it guarantee unique file names in any way?
