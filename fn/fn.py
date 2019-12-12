@@ -3,7 +3,7 @@
 
 from glob import glob
 from os import chdir
-from os import getcwd
+# from os import getcwd
 from os import getpid
 
 # from .git import _init_git_sha
@@ -59,10 +59,10 @@ class Fn:
       try:
         chdir(d)
       except FileNotFoundError:
-        raise ValueError('no folder, {:s}'.format(d))
+        raise ValueError('no folder: {:s}'.format(d))
 
-    return norm_path_gen(
-        rel_abs_path(d, rel, _abs, sorted(glob('*{:s}*'.format(self.gitsha)))))
+    files = glob('*{:s}{:s}*'.format(DELIMIT, self.gitsha))
+    return norm_path_gen(rel_abs_path(d, rel, _abs, sorted(files)))
 
   def get_pid_sha(self):
     return self.pid_sha
@@ -77,11 +77,11 @@ class Fn:
     if not current:
       return []
 
-    pidsha = remove_extension(get_file_name(current[-1]))\
-        .split(DELIMIT)[-1]
+    pidsha = DELIMIT+remove_extension(get_file_name(current[-1]))\
+        .split(DELIMIT)[3]
     return filter(lambda x: pidsha in x, current)
 
-  def recent_nopref(self, d):
+  def recent_nosuffix(self, d):
     current = list(self.__get_current_files(d))
     if current:
       yield remove_extension(get_file_name(current[-1]))

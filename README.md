@@ -1,4 +1,4 @@
-# FN---File Names
+# FN—File Names
 
 
 ## What is it?
@@ -15,11 +15,10 @@ When `fn` is called from the terminal, the file names look like this:
 
 Which currently follows this format:
 
-    yyyymmdd-hhmmss-gitsha-procdatetimesha
+    yyyymmdd-hhmmss-gitsha-piddatetimehash
 
-Where `gitsha` is the prefix of the git commit sha. And `procdatetimesha` is a
-hash of the time when `Fn()` is called and the process id of the calling python
-script.
+Where `gitsha` is the prefix of the git commit sha. And `piddatetimehash` is a
+hash of the time when `Fn()` is called and the corresponding process id.
 
 If you are not in a git repo, it looks like this:
 
@@ -48,11 +47,11 @@ also uses `docopt`, installed via `setup.py`.
 
 The easiest is to install with:
 
-    ./setup.py [install | develop] --user
+    ./setup.py [install | develop] [--user]
 
 Unfortunately the command line support relies on `entry_points`, which is
 rather slow. To make it run faster you can (for instance) add a symlink in your
-local `bin` folder to `./run.py` in this package.
+local `bin` folder to `./run.py` in this repo.
 
 
 ## Does it guarantee unique file names in any way?

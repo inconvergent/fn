@@ -17,14 +17,14 @@ Usage:
 Options:
   -t          return timestamp.
   -g          return current git sha.
-  -p          return pid:datetime sha.
+  -p          return pid:datetime hash.
   -m          include microseconds.
 
   -l          list all files with current git sha.
-  -r          list all files with the most recent pid:datetime sha.
+  -r          list all files with the most recent pid:datetime hash.
 
   -R          return most recent file name with no suffix.
-  -s          return most recent file name, pid:datetime sha only.
+  -s          return most recent pid:datetime hash only.
 
   -A          absolute paths.
   -a          relative paths.
@@ -36,6 +36,7 @@ Options:
 
 
 from sys import stderr
+from sys import exit
 from traceback import print_exc
 
 from docopt import docopt
@@ -54,7 +55,7 @@ def handle_args(fn, args):
   if args['-s']:
     return [short_ref(list(fn.recent(d=args['<dir>'])))]
   if args['-R']:
-    return fn.recent_nopref(d=args['<dir>'])
+    return fn.recent_nosuffix(d=args['<dir>'])
   if args['-p']:
     return [fn.get_pid_sha()]
   if args['-g']:
@@ -70,7 +71,7 @@ def genif(res):
 
 
 def main():
-  args = docopt(__doc__, version='fn 1.1.2')
+  args = docopt(__doc__, version='fn 1.1.3')
 
   # shortcut
   if args['-t']:
