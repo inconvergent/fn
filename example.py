@@ -10,7 +10,7 @@ def main():
   fn = Fn()
   for _ in range(20):
     print(fn.name())
-    sleep(0.01)
+    sleep(0.1)
 
   print()
 
@@ -25,8 +25,6 @@ def main():
   print(fn.name(postfix=''))
   print(fn.name(postfix='.png'))
 
-  print(fn.name(milli=False))
-  print(fn.name(milli=True))
   print()
 
 
