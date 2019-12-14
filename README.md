@@ -6,7 +6,7 @@
 This is a tiny library to generate file names.
 
 It will give you unique file names based on current git commit, as well as the
-time and date. You can also set your own prefix and/or postfix.
+time and date.
 
 When `fn` is called from the terminal, the file names look like this:
 
@@ -15,10 +15,10 @@ When `fn` is called from the terminal, the file names look like this:
 
 Which currently follows this format:
 
-    yyyymmdd-hhmmss-gitsha-piddatetimehash
+    yyyymmdd-hhmmss-gitsha-prochash
 
-Where `gitsha` is the prefix of the git commit sha. And `piddatetimehash` is a
-hash of the time when `Fn()` is called and the corresponding process id.
+Where `gitsha` is the prefix of the git commit sha. And `prochash` is a hash of
+the time when `Fn()` is called and the corresponding process id.
 
 If you are not in a git repo, it looks like this:
 
