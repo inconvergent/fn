@@ -6,14 +6,14 @@ from os import chdir
 from os import getpid
 
 from .git import _init_git_sha_cmd
-from .utils import _getsha
+from .utils import getsha
 from .utils import get_file_name_tokenizer
 from .utils import get_time
 from .utils import rel_abs_path
 from .utils import remove_extension
 from .utils import sortfx
 
-DELIMIT = '-'
+SEP = '-'
 
 
 class Fn:
@@ -22,8 +22,7 @@ class Fn:
     self.postfix = postfix
     self.git_sha_size = git_sha_size
     self.pid_sha_size = pid_sha_size
-    self.tokenizer = get_file_name_tokenizer(
-        DELIMIT, git_sha_size, pid_sha_size)
+    self.tokenizer = get_file_name_tokenizer(SEP, git_sha_size, pid_sha_size)
 
     self.gitsha = _init_git_sha_cmd(self.git_sha_size)
     self.pid_sha = self.__get_pid_time_sha()
@@ -35,11 +34,11 @@ class Fn:
     return False
 
   def __get_pid_time_sha(self):
-    return _getsha([get_time(), getpid()])[:self.pid_sha_size]
+    return getsha([get_time(), getpid()])[:self.pid_sha_size]
 
   def name(self, milli=True, postfix=None):
     l = [self.prefix, get_time(milli=milli),
-         DELIMIT, self.gitsha, DELIMIT, self.pid_sha]
+         SEP, self.gitsha, SEP, self.pid_sha]
 
     if postfix is not None:
       l.append(postfix)
@@ -47,7 +46,7 @@ class Fn:
       l.append(self.postfix)
     return ''.join(l)
 
-  def __get_current_files(self, d=None, rel=False, _abs=False):
+  def __get_current_files(self, d=None, no_rel=False, _abs=False):
     if not self.gitsha:
       raise ValueError('not in a git repo')
 
@@ -59,10 +58,10 @@ class Fn:
 
     files = sorted(
         self.tokenizer(
-            glob('*{:s}{:s}*'.format(DELIMIT, self.gitsha))
+            glob('*{:s}{:s}*'.format(SEP, self.gitsha))
             ),
         key=sortfx)
-    return rel_abs_path(d, rel, _abs, files)
+    return rel_abs_path(d, no_rel, _abs, files)
 
   def get_pid_sha(self):
     return self.pid_sha
@@ -88,7 +87,7 @@ class Fn:
       yield current[-1]['prochash']
 
   def recent_nosuffix(self, d):
-    current = list(self.__get_current_files(d))
+    current = list(self.__get_current_files(d, no_rel=True))
     if current:
       yield remove_extension(current[-1]['_raw'])
 

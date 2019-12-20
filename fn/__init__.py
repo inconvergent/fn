@@ -4,29 +4,28 @@
 """fn
 
 Usage:
-  fn [-t] [-m]
+  fn [-m] [-t]
   fn -g
   fn -p
-  fn -l [-a|-A] [<dir>]
   fn -r [-a|-A] [<dir>]
+  fn -l [-a|-A] [<dir>]
   fn -R [<dir>]
   fn -s [<dir>]
 
 
 Options:
-  -t          return timestamp only.
   -m          include milliseconds.
+  -t          return timestamp only.
   -g          return current git sha.
-  -p          return prochash.
+  -p          return a prochash.
 
-  -l          list all files with current git sha.
-  -r          list all files with the most recent prochash.
-
+  -r          return all files with the most recent prochash.
+  -l          return all files with current git sha.
   -R          return most recent file name with no suffix.
   -s          return most recent prochash only.
 
-  -A          absolute paths.
-  -a          relative paths.
+  -a          do not return relative paths.
+  -A          return absolute paths.
 
   -h --help   show this screen.
   --version   show version.
@@ -48,9 +47,9 @@ from fn.utils import get_time
 
 def handle_args(fn, args):
   if args['-l']:
-    return fn.lst(d=args['<dir>'], rel=args['-a'], _abs=args['-A'])
+    return fn.lst(d=args['<dir>'], no_rel=args['-a'], _abs=args['-A'])
   if args['-r']:
-    return fn.recent(d=args['<dir>'], rel=args['-a'], _abs=args['-A'])
+    return fn.recent(d=args['<dir>'], no_rel=args['-a'], _abs=args['-A'])
   if args['-s']:
     return fn.recent_prochash(args['<dir>'])
   if args['-R']:
@@ -63,7 +62,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.0.0')
+  args = docopt(__doc__, version='fn 2.1.0')
 
   if args['-t']:
     print(get_time(milli=args['-m']))
