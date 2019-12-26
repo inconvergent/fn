@@ -67,7 +67,7 @@ def get_file_name_tokenizer(sep, git_size, pid_size):
     return sep.join([
         r'^(?P<date>[0-9]{8})',
         r'(?P<time>([0-9]{6}(_[0-9]{6})?))',
-        r'(?P<gitsha>[0-9a-z]{{{:d}}})'.format(git_size),
+        r'(?P<gitsha>[0-9a-z]{{{:d}}})?'.format(git_size),
         r'(?P<prochash>[0-9a-z]{{{:d}}})'.format(pid_size),
         ])
   def _end():

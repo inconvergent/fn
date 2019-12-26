@@ -36,9 +36,7 @@ Options:
 from sys import stderr
 from sys import exit
 from traceback import print_exc
-
 from docopt import docopt
-
 from fn.fn import Fn
 from fn.utils import genif
 from fn.utils import get_time
@@ -62,7 +60,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.1.0')
+  args = docopt(__doc__, version='fn 2.2.0')
 
   if args['-t']:
     print(get_time(milli=args['-m']))
