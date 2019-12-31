@@ -89,5 +89,11 @@ class Fn:
 
   def lst(self, **args):
     self.__is_git()
-    return map(lambda x: x['_raw'], self.__get_current_files(**args))
+    files = list(self.__get_current_files(**args))
+    if not files:
+      return []
+    prochash = files[-1]['gitsha']
+    return map(
+        lambda x: x['_raw'],
+        filter(lambda x: x['gitsha'] == prochash, files))
 
