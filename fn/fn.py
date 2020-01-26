@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-
 from glob import glob
 from os import chdir
 from os import getpid
 
 from .git import _init_git_sha_cmd
-from .utils import getsha
 from .utils import get_file_name_tokenizer
 from .utils import get_time
+from .utils import getsha
 from .utils import rel_abs_path
 from .utils import remove_extension
 from .utils import sortfx
@@ -18,10 +17,10 @@ SEP = '-'
 
 class Fn:
   def __init__(self, prefix='', postfix='', git_sha_size=7, pid_sha_size=8):
-    self.prefix = prefix
-    self.postfix = postfix
     self.git_sha_size = git_sha_size
     self.pid_sha_size = pid_sha_size
+    self.postfix = postfix
+    self.prefix = prefix
     self.tokenizer = get_file_name_tokenizer(SEP, git_sha_size, pid_sha_size)
     self.gitsha = _init_git_sha_cmd(self.git_sha_size)
     self.pid_sha = self.__get_pid_time_sha()
