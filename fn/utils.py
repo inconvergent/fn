@@ -34,13 +34,19 @@ def remove_extension(p):
   return splitext(p)[0]
 
 
-def rel_abs_path(d, no_rel, _abs, files):
-  if no_rel:
-    fx = lambda x: x
-  elif _abs:
-    fx = abspath
-  else:
-    fx = (('.' if d is None else d) + '/{:s}').format
+def get_path_fx(d, path):
+  try:
+    return {
+        'file': (('.' if d is None else d) + '/{:s}').format,
+        'rel': lambda x: x,
+        'abs': abspath,
+        }[path]
+  except KeyError:
+    return 'incorrect path arguments. use [-a|-A] or neither'
+
+
+def rel_abs_path(d, path, files):
+  fx = get_path_fx(d, path)
   for f in files:
     yield overlay(f, {'_raw': normpath(fx(f['_raw']))})
 

@@ -3,6 +3,15 @@
 
 """fn
 
+Description:
+  `fn` is a tool for generating, and parsing, file names based on
+  current date, time, process id and gitsha.
+
+  use `fn` to generate a file name.
+  use `fn -r [dir]` to get the most recent file (in dir).
+  more options listed below.
+
+
 Usage:
   fn [-m] [-t]
   fn -g
@@ -19,13 +28,13 @@ Options:
   -p          return a prochash.
   -t          return timestamp only.
 
+  -r          return all files with the most recent prochash.
   -R          return most recent file name with no suffix.
   -l          return all files with current git sha.
-  -r          return all files with the most recent prochash.
   -s          return most recent prochash.
 
+  -a          show file name only.
   -A          show absolute paths.
-  -a          show relative paths.
 
   -h --help   show this screen.
   --version   show version.
@@ -42,15 +51,28 @@ from docopt import docopt
 from fn.fn import Fn
 from fn.utils import genif
 from fn.utils import get_time
+from fn.utils import overlay
 
+
+def handle_path_args(args):
+  # relative path style: dir/file.ext
+  path_style = 'rel'
+  if args['-a']:
+    # file name only: file.ext
+    path_style = 'file'
+  elif args['-A']:
+    # absolute path style: /a/b/file.ext
+    path_style = 'abs'
+  return overlay(args, {'path_style': path_style})
 
 def handle_args(fn, args):
+  args = handle_path_args(args)
   if args['-l']:
-    return fn.lst(d=args['<dir>'], no_rel=args['-a'], _abs=args['-A'])
+    return fn.lst(d=args['<dir>'], path_style=args['path_style'])
   if args['-r']:
-    return fn.recent(d=args['<dir>'], no_rel=args['-a'], _abs=args['-A'])
+    return fn.recent(d=args['<dir>'], path_style=args['path_style'])
   if args['-s']:
-    return fn.recent_prochash(args['<dir>'])
+    return fn.recent_prochash(d=args['<dir>'])
   if args['-R']:
     return fn.recent_nosuffix(d=args['<dir>'])
   if args['-p']:
@@ -61,7 +83,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.2.0')
+  args = docopt(__doc__, version='fn 2.2.1')
 
   if args['-t']:
     print(get_time(milli=args['-m']))
