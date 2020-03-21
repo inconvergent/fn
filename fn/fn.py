@@ -49,8 +49,7 @@ class Fn:
       l.append(self.postfix)
     return ''.join(l)
 
-  def __get_current_files(self, d=None, no_rel=False, _abs=False):
-
+  def __get_current_files(self, d=None, path_style='rel'):
     if d:
       try:
         chdir(d)
@@ -58,7 +57,7 @@ class Fn:
         raise ValueError('no folder: {:s}'.format(d))
 
     return rel_abs_path(
-        d, no_rel, _abs, sorted(self.tokenizer(glob('*')), key=sortfx))
+        d, path_style, sorted(self.tokenizer(glob('*')), key=sortfx))
 
   def get_pid_sha(self):
     return self.pid_sha
@@ -76,15 +75,15 @@ class Fn:
         lambda f: f['_raw'],
         filter(lambda f: f['prochash'] == prochash, current))
 
+  def recent_nosuffix(self, d):
+    current = list(self.__get_current_files(d, path_style='file'))
+    if current:
+      yield remove_extension(current[-1]['_raw'])
+
   def recent_prochash(self, d):
     current = list(self.__get_current_files(d))
     if current:
       yield current[-1]['prochash']
-
-  def recent_nosuffix(self, d):
-    current = list(self.__get_current_files(d, no_rel=True))
-    if current:
-      yield remove_extension(current[-1]['_raw'])
 
   def lst(self, **args):
     self.__is_git()
