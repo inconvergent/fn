@@ -11,6 +11,8 @@ from .utils import getsha
 from .utils import rel_abs_path
 from .utils import remove_extension
 from .utils import sortfx
+from .utils import overlay
+from .utils import deduplicate_files
 
 SEP = '-'
 
@@ -49,15 +51,19 @@ class Fn:
       l.append(self.postfix)
     return ''.join(l)
 
-  def __get_current_files(self, d=None, path_style='rel'):
+  def __get_current_files(self, d=None, path_style='rel', suffix=True):
     if d:
       try:
         chdir(d)
       except FileNotFoundError:
         raise ValueError('no folder: {:s}'.format(d))
 
-    return rel_abs_path(
-        d, path_style, sorted(self.tokenizer(glob('*')), key=sortfx))
+    files = self.tokenizer(glob('*'))
+    if not suffix:
+      files = deduplicate_files(
+          [overlay(f, {'_raw': remove_extension(f['_raw'])}) for f in files])
+
+    return rel_abs_path(d, path_style, sorted(files, key=sortfx))
 
   def get_pid_sha(self):
     return self.pid_sha
@@ -75,16 +81,6 @@ class Fn:
         lambda f: f['_raw'],
         filter(lambda f: f['prochash'] == prochash, current))
 
-  def recent_nosuffix(self, d):
-    current = list(self.__get_current_files(d, path_style='file'))
-    if current:
-      yield remove_extension(current[-1]['_raw'])
-
-  def recent_prochash(self, d):
-    current = list(self.__get_current_files(d))
-    if current:
-      yield current[-1]['prochash']
-
   def lst(self, **args):
     self.__is_git()
     files = list(self.__get_current_files(**args))
@@ -94,4 +90,9 @@ class Fn:
     return map(
         lambda x: x['_raw'],
         filter(lambda x: x['gitsha'] == prochash, files))
+
+  def recent_prochash(self, d):
+    current = list(self.__get_current_files(d))
+    if current:
+      yield current[-1]['prochash']
 

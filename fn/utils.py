@@ -51,6 +51,14 @@ def rel_abs_path(d, path, files):
     yield overlay(f, {'_raw': normpath(fx(f['_raw']))})
 
 
+def deduplicate_files(files):
+  d = set()
+  for f in files:
+    if f['_raw'] not in d:
+      d.update([f['_raw']])
+      yield f
+
+
 def get_time(milli=True, sep='-'):
   now = datetime.now()
   if milli:

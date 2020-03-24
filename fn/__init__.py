@@ -16,9 +16,8 @@ Usage:
   fn [-m] [-t]
   fn -g
   fn -p
-  fn -r [-a|-A] [<dir>]
-  fn -l [-a|-A] [<dir>]
-  fn -R [<dir>]
+  fn -r [-a|-A] [-f] [<dir>]
+  fn -l [-a|-A] [-f] [<dir>]
   fn -s [<dir>]
 
 
@@ -29,12 +28,12 @@ Options:
   -t          return timestamp only.
 
   -r          return all files with the most recent prochash.
-  -R          return most recent file name with no suffix.
   -l          return all files with current git sha.
   -s          return most recent prochash.
 
   -a          show file name only.
   -A          show absolute paths.
+  -f          remove file suffix. resulting duplicates will be removed.
 
   -h --help   show this screen.
   --version   show version.
@@ -68,13 +67,15 @@ def handle_path_args(args):
 def handle_args(fn, args):
   args = handle_path_args(args)
   if args['-l']:
-    return fn.lst(d=args['<dir>'], path_style=args['path_style'])
+    return fn.lst(d=args['<dir>'],
+                  path_style=args['path_style'],
+                  suffix=not args['-f'])
   if args['-r']:
-    return fn.recent(d=args['<dir>'], path_style=args['path_style'])
+    return fn.recent(d=args['<dir>'],
+                     path_style=args['path_style'],
+                     suffix=not args['-f'])
   if args['-s']:
     return fn.recent_prochash(d=args['<dir>'])
-  if args['-R']:
-    return fn.recent_nosuffix(d=args['<dir>'])
   if args['-p']:
     return [fn.get_pid_sha()]
   if args['-g']:
@@ -83,7 +84,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.2.1')
+  args = docopt(__doc__, version='fn 2.3.0')
 
   if args['-t']:
     print(get_time(milli=args['-m']))
