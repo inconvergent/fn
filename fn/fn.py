@@ -1,18 +1,16 @@
-# -*- coding: utf-8 -*-
-
 from glob import glob
 from os import chdir
 from os import getpid
 
+from .files import deduplicate_files
+from .files import get_file_name_tokenizer
+from .files import rel_abs_path
+from .files import remove_extension
 from .git import _init_git_sha_cmd
-from .utils import get_file_name_tokenizer
 from .utils import get_time
 from .utils import getsha
-from .utils import rel_abs_path
-from .utils import remove_extension
-from .utils import sortfx
 from .utils import overlay
-from .utils import deduplicate_files
+from .utils import sortfx
 
 SEP = '-'
 
@@ -51,7 +49,7 @@ class Fn:
       l.append(self.postfix)
     return ''.join(l)
 
-  def __get_current_files(self, d=None, path_style='rel', suffix=True):
+  def _get_current_files(self, d=None, path_style='rel', ext=True):
     if d:
       try:
         chdir(d)
@@ -59,9 +57,10 @@ class Fn:
         raise ValueError('no folder: {:s}'.format(d))
 
     files = self.tokenizer(glob('*'))
-    if not suffix:
+    if not ext:
       files = deduplicate_files(
-          [overlay(f, {'_raw': remove_extension(f['_raw'])}) for f in files])
+          [overlay(f, {'_raw': remove_extension(f['_raw'])})
+           for f in files])
 
     return rel_abs_path(d, path_style, sorted(files, key=sortfx))
 
@@ -72,27 +71,23 @@ class Fn:
     return self.__is_git()
 
   def recent(self, **args):
-    current = list(self.__get_current_files(**args))
+    current = list(self._get_current_files(**args))
     if not current:
       return []
-
     prochash = current[-1]['prochash']
     return map(
         lambda f: f['_raw'],
         filter(lambda f: f['prochash'] == prochash, current))
 
   def lst(self, **args):
-    self.__is_git()
-    files = list(self.__get_current_files(**args))
-    if not files:
-      return []
-    prochash = files[-1]['gitsha']
+    sha = self.get_sha()
     return map(
         lambda x: x['_raw'],
-        filter(lambda x: x['gitsha'] == prochash, files))
+        filter(lambda x: x['gitsha'] == sha,
+               self._get_current_files(**args)))
 
   def recent_prochash(self, d):
-    current = list(self.__get_current_files(d))
+    current = list(self._get_current_files(d))
     if current:
       yield current[-1]['prochash']
 

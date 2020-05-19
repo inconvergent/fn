@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from os import devnull
 from subprocess import PIPE
 from subprocess import Popen

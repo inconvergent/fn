@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 
 try:
@@ -9,7 +8,7 @@ except ImportError:
 
 
 setup(name='fn',
-      version='2.3.0',
+      version='2.3.1',
       description='fn',
       url='https://github.com/inconvergent/fn',
       license='MIT License',
