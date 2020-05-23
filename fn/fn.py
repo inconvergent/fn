@@ -86,6 +86,16 @@ class Fn:
         filter(lambda x: x['gitsha'] == sha,
                self._get_current_files(**args)))
 
+  def lst_recent(self, **args):
+    self.get_sha()
+    current = list(self._get_current_files(**args))
+    if not current:
+      return []
+    sha = current[-1]['gitsha']
+    return map(
+        lambda x: x['_raw'],
+        filter(lambda x: x['gitsha'] == sha, current))
+
   def recent_prochash(self, d):
     current = list(self._get_current_files(d))
     if current:

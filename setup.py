@@ -8,7 +8,7 @@ except ImportError:
 
 
 setup(name='fn',
-      version='2.3.1',
+      version='2.3.2',
       description='fn',
       url='https://github.com/inconvergent/fn',
       license='MIT License',

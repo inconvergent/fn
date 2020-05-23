@@ -17,6 +17,7 @@ Usage:
   fn -p
   fn -r [-a|-A] [-f] [-i] [-n <num>] [<dir>]
   fn -l [-a|-A] [-f] [-i] [-n <num>] [<dir>]
+  fn -L [-a|-A] [-f] [-i] [-n <num>] [<dir>]
   fn -s [<dir>]
 
 
@@ -29,6 +30,7 @@ Options:
   -r          return all files with the most recent prochash.
                 sorted by time, asc.
   -l          return all files with current git sha. sorted by time, asc.
+  -L          return all files with most recent git sha. sorted by time, asc.
   -i          reverse output.
   -n NUM      limit to n rows.
   -s          return most recent prochash.
@@ -69,6 +71,10 @@ def handle_args(fn, args):
     return fn.lst(d=args['<dir>'],
                   path_style=args['path_style'],
                   ext=not args['-f'])
+  if args['-L']:
+    return fn.lst_recent(d=args['<dir>'],
+                         path_style=args['path_style'],
+                         ext=not args['-f'])
   if args['-r']:
     return fn.recent(d=args['<dir>'],
                      path_style=args['path_style'],
@@ -83,7 +89,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.3.1')
+  args = docopt(__doc__, version='fn 2.3.2')
   if args['-t']:
     print(get_time(milli=args['-m']))
     pexit(0)
