@@ -32,8 +32,8 @@ def getsha(v):
   return h.hexdigest()
 
 
-def get_time(milli=True, sep='-'):
-  now = datetime.now()
+def get_time(milli=True, sep='-', utc=True):
+  now = datetime.utcnow() if utc else datetime.now()
   if milli:
     return now.strftime('%Y%m%d{deli}%H%M%S_%f'.format(deli=sep))
   return now.strftime('%Y%m%d{deli}%H%M%S'.format(deli=sep))

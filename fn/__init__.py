@@ -89,7 +89,7 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.3.2')
+  args = docopt(__doc__, version='fn 2.3.3')
   if args['-t']:
     print(get_time(milli=args['-m']))
     pexit(0)

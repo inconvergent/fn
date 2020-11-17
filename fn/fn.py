@@ -39,8 +39,8 @@ class Fn:
   def __get_pid_time_sha(self):
     return getsha([get_time(), getpid()])[:self.pid_sha_size]
 
-  def name(self, milli=True, postfix=None):
-    l = [self.prefix, get_time(milli=milli),
+  def name(self, milli=True, postfix=None, utc=True):
+    l = [self.prefix, get_time(milli=milli, utc=utc),
          SEP, self.gitsha, SEP, self.pid_sha]
 
     if postfix is not None:
