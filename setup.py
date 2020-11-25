@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 
 
 try:
@@ -8,7 +8,7 @@ except ImportError:
 
 
 setup(name='fn',
-      version='2.3.3',
+      version='2.4.0',
       description='fn',
       url='https://github.com/inconvergent/fn',
       license='MIT License',

@@ -11,8 +11,8 @@ def _run_cmd_wait(cmd):
 
 
 def _init_git_sha_cmd(git_sha_size):
-  cmd = ['git', 'rev-parse', '--short={:d}'.format(git_sha_size), 'HEAD']
-  rc, sha = _run_cmd_wait(cmd)
+  rc, sha = _run_cmd_wait(
+      ['git', 'rev-parse', '--short={:d}'.format(git_sha_size), 'HEAD'])
   if rc == 0:
     return sha.strip()
   return ''

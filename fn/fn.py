@@ -1,5 +1,4 @@
 from glob import glob
-from os import chdir
 from os import getpid
 
 from .files import deduplicate_files
@@ -49,17 +48,13 @@ class Fn:
       l.append(self.postfix)
     return ''.join(l)
 
-  def _get_current_files(self, d=None, path_style='rel', ext=True):
-    if d:
-      try:
-        chdir(d)
-      except FileNotFoundError:
-        raise ValueError('no folder: {:s}'.format(d))
-
-    files = self.tokenizer(glob('*'))
+  def _get_current_files(self, d='.', path_style='rel', ext=True):
+    if d is None:
+      d = '.'
+    files = self.tokenizer(glob('{:s}/*'.format(d)))
     if not ext:
       files = deduplicate_files(
-          [overlay(f, {'_raw': remove_extension(f['_raw'])})
+          [overlay(f, _raw=remove_extension(f['_raw']))
            for f in files])
 
     return rel_abs_path(d, path_style, sorted(files, key=sortfx))

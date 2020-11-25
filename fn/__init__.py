@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """fn
 
 Description:
@@ -12,12 +10,10 @@ Description:
 
 
 Usage:
-  fn [-m] [-t]
+  fn [-m] [-d]
+  fn [-r | -l | -L] [-a|-A] [-f] [-n TAIL | -N HEAD] [-i] [DIR]
   fn -g
   fn -p
-  fn -r [-a|-A] [-f] [-i] [-n <num>] [<dir>]
-  fn -l [-a|-A] [-f] [-i] [-n <num>] [<dir>]
-  fn -L [-a|-A] [-f] [-i] [-n <num>] [<dir>]
   fn -s [<dir>]
 
 
@@ -25,14 +21,17 @@ Options:
   -m          include milliseconds.
   -g          return current git sha.
   -p          return a prochash.
-  -t          return timestamp only.
+  -d          return timestamp only.
 
   -r          return all files with the most recent prochash.
                 sorted by time, asc.
   -l          return all files with current git sha. sorted by time, asc.
   -L          return all files with most recent git sha. sorted by time, asc.
+
+  -N HEAD     HEAD first rows.
+  -n TAIL     TAIL last rows.
   -i          reverse output.
-  -n NUM      limit to n rows.
+
   -s          return most recent prochash.
 
   -a          show file name only.
@@ -53,7 +52,7 @@ from docopt import docopt
 
 from fn.fn import Fn
 from fn.utils import get_time
-from fn.utils import inv_num
+from fn.utils import head_tail
 from fn.utils import overlay
 
 
@@ -63,24 +62,24 @@ def handle_path_args(args):
     path_style = 'file'
   elif args['-A']: # absolute path style: /a/b/file.ext
     path_style = 'abs'
-  return overlay(args, {'path_style': path_style})
+  return overlay(args, path_style=path_style)
 
 def handle_args(fn, args):
   args = handle_path_args(args)
   if args['-l']:
-    return fn.lst(d=args['<dir>'],
+    return fn.lst(d=args['DIR'],
                   path_style=args['path_style'],
                   ext=not args['-f'])
   if args['-L']:
-    return fn.lst_recent(d=args['<dir>'],
+    return fn.lst_recent(d=args['DIR'],
                          path_style=args['path_style'],
                          ext=not args['-f'])
   if args['-r']:
-    return fn.recent(d=args['<dir>'],
+    return fn.recent(d=args['DIR'],
                      path_style=args['path_style'],
                      ext=not args['-f'])
   if args['-s']:
-    return fn.recent_prochash(d=args['<dir>'])
+    return fn.recent_prochash(d=args['DIR'])
   if args['-p']:
     return [fn.get_pid_sha()]
   if args['-g']:
@@ -89,15 +88,17 @@ def handle_args(fn, args):
 
 
 def main():
-  args = docopt(__doc__, version='fn 2.3.3')
-  if args['-t']:
+  args = docopt(__doc__, version='fn 2.4.0')
+  # print(args)
+  if args['-d']:
     print(get_time(milli=args['-m']))
     pexit(0)
 
   try:
     with Fn() as fn:
       res = filter(bool, handle_args(fn, args))
-      for r in inv_num(res, args['-i'], args['-n']):
+      for r in head_tail(res, head=args['-N'], tail=args['-n'],
+                         reverse=args['-i']):
         print(r)
   except ValueError as e:
     print('err: ' + str(e), file=stderr)
