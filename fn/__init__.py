@@ -95,11 +95,11 @@ def main():
     pexit(0)
 
   try:
-    with Fn() as fn:
-      res = filter(bool, handle_args(fn, args))
-      for r in head_tail(res, head=args['-N'], tail=args['-n'],
-                         reverse=args['-i']):
-        print(r)
+    fn = Fn()
+    res = filter(bool, handle_args(fn, args))
+    for r in head_tail(res, head=args['-N'], tail=args['-n'],
+                       reverse=args['-i']):
+      print(r)
   except ValueError as e:
     print('err: ' + str(e), file=stderr)
     pexit(1)

@@ -24,11 +24,11 @@ class Fn:
     self.gitsha = _init_git_sha_cmd(self.git_sha_size)
     self.pid_sha = self.__get_pid_time_sha()
 
-  def __enter__(self):
-    return self
+  # def __enter__(self):
+  #   return self
 
-  def __exit__(self, t, value, traceback):
-    return False
+  # def __exit__(self, t, value, traceback):
+  #   return False
 
   def __is_git(self):
     if not self.gitsha:
